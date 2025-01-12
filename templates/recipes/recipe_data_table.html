@@ -1,0 +1,14 @@
+<table>
+    <tr>
+        <td>Recipe Title:</td><td><input type="text" name="recipe_title" {% if recipe is defined %}value="{{recipe.recipe_title}}"{% endif %}></td>
+    </tr>
+    <tr>
+        <td>Recipe Ingredients:</td><td><input type="text" name="recipe_ingredients" {% if recipe is defined %}value="{{recipe.recipe_ingredients}}"{% endif %}></td>
+    </tr>
+    <tr>
+        <td>Recipe Macros:</td><td><input type="text" name="recipe_macros" {% if recipe is defined %}value="{{recipe.recipe_macros}}"{% endif %}></td>
+    </tr>
+    <tr>
+        <td></td><td><input type="submit" value="Save"></td>
+    </tr>
+</table>

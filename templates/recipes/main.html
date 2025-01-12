@@ -1,0 +1,35 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+    <div class="page-header">
+        <h2>Recipe Collection</h2>
+        <a href="{{ url_for('newrecipe') }}" class="button">Add New Recipe</a>
+    </div>
+
+    {% if recipes %}
+    <div class="recipe-grid">
+        {% for recipe in recipes %}
+        <div class="recipe-card">
+            <h3>{{recipe.recipe_title}}</h3>
+            <div class="recipe-content">
+                <div class="recipe-section">
+                    <h4>Ingredients:</h4>
+                    <p>{{recipe.recipe_ingredients}}</p>
+                </div>
+                <div class="recipe-section">
+                    <h4>Macros:</h4>
+                    <p>{{recipe.recipe_macros}}</p>
+                </div>
+            </div>
+            <div class="recipe-actions">
+                <a href="/editrecipe/{{recipe.recipe_id}}" class="button button-small">Edit</a>
+                <a href="/deleterecipe/{{recipe.recipe_id}}" class="button button-small button-delete">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No recipes yet. Click "Add New Recipe" to get started!</p>
+    </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,231 @@
+openapi: 3.0.0
+info:
+  title: "Nutritionist"
+  description: "API for a nutritionist website"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  schemas:
+
+    Account:
+      type: "object"
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+
+    Recipes:
+      type: "object"
+      required:
+        - recipe_title
+        - recipe_ingredients
+        - recipe_macros
+      properties:
+        recipe_id:
+          type: "integer"
+        recipe_title:
+          type: "string"
+        recipe_ingredients:
+          type: "string"
+        recipe_macros:
+          type: "string"
+
+    CalorieCalculator:
+      type: "object"
+      required:
+        - age
+        - gender
+        - height
+        - weight
+        - activity_level
+      properties:
+        age:
+          type: "number"
+          description: "Age of the person"
+        gender:
+          type: "string"
+          enum: [ "male", "female" ]
+          description: "Gender of the person"
+        height:
+          type: "number"
+          format: "float"
+          description: "Height of the person in centimeters"
+        weight:
+          type: "number"
+          format: "float"
+          description: "Weight of the person in kilograms"
+        activity_level:
+          type: "string"
+          enum: [ "sedentary", "light", "moderate", "active", "very_active" ]
+          description: "Activity level, from sedentary to very active"
+
+  parameters:
+    recipe_id:
+      name: "recipe_id"
+      description: "Unique identifier for recipes"
+      in: path
+      required: true
+      schema:
+        type: "integer"
+
+paths:
+  /register:
+    post:
+      operationId: "api.controllers.account_controller.register_user"
+      tags:
+        - "Account"
+      summary: "Register a new user"
+      requestBody:
+        description: "User registration details"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Account"
+      responses:
+        "201":
+          description: "User successfully registered"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+        "400":
+          description: "Invalid input data"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /login:
+    post:
+      operationId: "api.controllers.account_controller.login_user"
+      tags:
+        - "Account"
+      summary: "Login a user"
+      requestBody:
+        description: "User login credentials"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Account"
+      responses:
+        "200":
+          description: "Successfully logged in"
+        "401":
+          description: "Invalid credentials"
+
+  /recipes:
+    get:
+      operationId: "api.controllers.recipe_controller.read_all"
+      tags:
+        - "Recipes"
+      summary: "Read the list of recipes"
+      responses:
+        "200":
+          description: "Successfully read recipe list"
+    post:
+      operationId: "api.controllers.recipe_controller.create"
+      tags:
+        - "Recipes"
+      summary: "Create a recipe"
+      requestBody:
+        description: "Recipe to create"
+        required: true
+        content:
+          application/json:
+            schema:
+              x-body-name: "recipe"
+              $ref: "#/components/schemas/Recipes"
+      responses:
+        "201":
+          description: "Successfully created recipe"
+        "400":
+          description: "Invalid input data"
+
+  /recipe/{recipe_id}:
+    get:
+      operationId: "api.controllers.recipe_controller.read_one"
+      tags:
+        - Recipes
+      summary: "Read one recipe"
+      parameters:
+        - $ref: "#/components/parameters/recipe_id"
+      responses:
+        "200":
+          description: "Successfully read recipe"
+        "404":
+          description: "Not found"
+    put:
+      operationId: "api.controllers.recipe_controller.update"
+      tags:
+        - Recipes
+      summary: "Update a recipe"
+      parameters:
+        - $ref: "#/components/parameters/recipe_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "recipe"
+              $ref: "#/components/schemas/Recipes"
+      responses:
+        "200":
+          description: "Successfully updated recipe"
+        "403":
+          description: "Unauthorized action"
+    delete:
+      operationId: "api.controllers.recipe_controller.delete"
+      tags:
+        - Recipes
+      summary: "Delete a recipe"
+      parameters:
+        - $ref: "#/components/parameters/recipe_id"
+      responses:
+        "204":
+          description: "Successfully deleted recipe"
+        "403":
+          description: "Unauthorized action"
+
+  /calories:
+    post:
+      operationId: "api.controllers.calculator_controller.calculate_calories"
+      tags:
+        - "Calorie Calculator"
+      summary: "Calculate daily calorie intake"
+      requestBody:
+        description: "Input data for calorie calculation"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalorieCalculator"
+      responses:
+        "200":
+          description: "Calorie requirements calculated"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  calories_needed:
+                    type: "number"
+                    format: "float"
+                    description: "Estimated daily calorie needs"
+        "400":
+          description: "Invalid input data"

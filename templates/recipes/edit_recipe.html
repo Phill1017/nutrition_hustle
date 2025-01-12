@@ -1,0 +1,30 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+<div class="calculator-container">
+    <h2>Edit Recipe</h2>
+    {% if recipe_updated is defined %}
+    <div class="result-box">
+        <p>Recipe updated: {{recipe_updated.recipe_title}}</p>
+    </div>
+    {% endif %}
+    
+    <form id="recipe_data" method="post" action="{{ url_for('editrecipe', recipe_id=recipe.recipe_id) }}" class="calculator-form">
+        <div class="form-group">
+            <label for="recipe_title">Recipe Title:</label>
+            <input type="text" id="recipe_title" name="recipe_title" value="{{recipe.recipe_title}}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="recipe_ingredients">Recipe Ingredients:</label>
+            <textarea id="recipe_ingredients" name="recipe_ingredients" required>{{recipe.recipe_ingredients}}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="recipe_macros">Recipe Macros:</label>
+            <input type="text" id="recipe_macros" name="recipe_macros" value="{{recipe.recipe_macros}}" required>
+        </div>
+        
+        <button type="submit" class="button button-primary">Update Recipe</button>
+    </form>
+</div>
+{% endblock %}

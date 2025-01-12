@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: nutrition-api:latest
+    ports:
+      - "81:81"
+    volumes:
+      - ./grades.db:/app/grades.db
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: nutrition-frontend:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+  cli:
+    build:
+      context: .
+      dockerfile: Dockerfile.cli
+    image: nutrition-cli:latest
+    depends_on:
+      - api
+    networks:
+      - app-network
+    stdin_open: true  
+    tty: true        
+
+networks:
+  app-network:
+    driver: bridge

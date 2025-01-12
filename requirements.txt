@@ -1,0 +1,5 @@
+Flask==2.2.3
+connexion[swagger-ui]==2.14.2
+requests==2.31.0
+configparser==6.0.0
+Werkzeug==2.2.3
